@@ -1,6 +1,6 @@
 # yumeX OS
 
-The project has not been completed yet...
+!!! The project has not been completed yet...
 
 That's all this operating system can do (yes, just output text about its boot =)):
 
