@@ -1,7 +1,7 @@
 #include "../../drivers/screen.h"
 
 const char *strip = "----------------------------------------------------------------------------";
-const char *message = "The kernel yumeX was successfully loaded in 32-bit protected mode.";
+const char *message = "The yumeX kernel was successfully loaded in 32-bit protected mode.";
 
 void draw_yumeX_logo() {
     kprint("                              _  __    ____  _____\n");

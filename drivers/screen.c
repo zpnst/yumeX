@@ -1,12 +1,20 @@
 #include "screen.h"
 #include "ports.h"
+#include "../kernel/libs/utils.h"
+#include "../kernel/libs/types.h"
 
-int get_screen_offset(int col, int row) {
-   int offset = 2 * (row * MAX_COLS + col);
-   return offset;
+s32 get_screen_offset(s32 col, s32 row) { 
+    return 2 * (row * MAX_COLS + col); 
 }
 
-int get_cursor() {
+s32 get_row_seqno(s32 offset) { 
+    return offset / (2 * MAX_COLS);
+}
+s32 get_col_seqno(s32 offset) { 
+    return (offset - (get_row_seqno(offset)*2*MAX_COLS))/2; 
+}
+
+s32 get_cursor_offset() {
 
    /*  The device uses its control register as an index
        to select its internal registers, of which we are
@@ -17,7 +25,7 @@ int get_cursor() {
 
    // select hight byte of internal cursor register
    port_byte_out(REG_SCREEN_CTRL, CURSOR_HB); 
-   int offset = port_byte_in(REG_SCREEN_DATA) << 8;
+   s32 offset = port_byte_in(REG_SCREEN_DATA) << 8;
 
    // select low byte of internal cursor register
    port_byte_out(REG_SCREEN_CTRL, CURSOR_LD);
@@ -29,10 +37,10 @@ int get_cursor() {
    return offset * 2;
 }
 
-void set_cursor(int cursor_offset) {    
+void set_cursor_offset(s32 cursor_offset) {    
    cursor_offset /= 2; // Convert from cell offset to char offset.
 
-   // This is similar to get_cursor, only now we write
+   // This is similar to get_cursor_offset, only now we write
    // bytes to those internal device registers.
 
    // Write high byte of cursor position to register 14
@@ -44,11 +52,44 @@ void set_cursor(int cursor_offset) {
    port_byte_out(REG_SCREEN_DATA, (unsigned char)(cursor_offset & 0xFF));
 }
 
+/* Advance the text cursor , scrolling the video buffer if necessary . */
+s32 handle_scrolling(s32 cursor_offset) {
+    // If the cursor is within the screen, return it unmodified .
+    if (cursor_offset < MAX_ROWS * MAX_COLS * 2) {
+        return cursor_offset;
+    }
+
+    /* Shuffle the rows back one. */
+    s32 iter;
+    for (iter = 0; iter < MAX_ROWS; iter += 1) {
+        memory_copy(get_screen_offset(0, iter)+VIDEO_ADDRESS,
+            get_screen_offset(0, iter-1)+VIDEO_ADDRESS,
+            MAX_COLS*2
+        );
+    }
+    /* Blank the last line by setting all bytes to 0 */
+    char *ll = get_screen_offset(0, MAX_ROWS-1) + VIDEO_ADDRESS;
+    for (iter = 0; iter < MAX_COLS * 2; iter++) {
+        ll[iter] = 0;
+    }
+
+    // Move the offset back one row, such that it is now on the last
+    // row, rather than off the edge of the screen 
+    cursor_offset -= 2 * MAX_COLS;
+
+    return cursor_offset;
+}
+
 /* Print a char on the screen at col, row, or at cursor position */
-void print_char(char character, int col, int row, char attribute_byte) {
+s32 print_char(char character, s32 col, s32 row, char attribute_byte) {
 
    /* Create a byte (char) pointer to the start of video memory */
    unsigned char *vidmem = (unsigned char *)VIDEO_ADDRESS;
+
+   /* Errors Control */
+   if (col >= MAX_COLS || row >= MAX_ROWS) {
+        return get_screen_offset(col, row);
+    }
 
    /* If attribute byte is zero, assume the default style. */
    if (!attribute_byte) {
@@ -56,53 +97,57 @@ void print_char(char character, int col, int row, char attribute_byte) {
    }
 
    /* Get the video memory offset for the screen location */
-   int offset;
+   s32 offset;
    /* If col and row are non - negative, use them for offset. */
 
    if (col >= 0 && row >= 0) {
        offset = get_screen_offset(col, row);
        /* Otherwise, use the current cursor position. */
    } else {
-       offset = get_cursor();
+       offset = get_cursor_offset();
    }
 
    // If we see a newline character, set offset to the end of
    // current row, so it will be advanced to the first col
    // of the next row.
    if (character == '\n') {
-       int rows = offset / (2*MAX_COLS);
-       offset = get_screen_offset(79, rows);
-
+        row = get_row_seqno(offset);
+        offset = get_screen_offset(0, row+1);
        // Otherwise, write the character and its attribute byte to
        // video memory at our calculated offset.
    } else {
        vidmem[offset] = character;
        vidmem[offset+1] = attribute_byte;
+       offset += 2;
    }
 
    // Update the offset to the next character cell, which is
    // two bytes ahead of the current cell.
-   offset += 2;
+   
+   offset = handle_scrolling(offset);
 
-   // Make scrolling adjustment, for when we reach the bottom
-   // of the screen.
-   // offset = handle_scrolling(offset);
-
-   // Update the cursor position on the screen device.
-   set_cursor(offset);
+   set_cursor_offset(offset);
+   return offset;
 }
 
-void kprint_at(char *message, int col, int row) {
-   // Update the cursor if col and row not negative.
-   if (col >= 0 && row >= 0) {
-       set_cursor(get_screen_offset(col, row));
-   }
-   
-   // Loop through each char of the message and print it .
-   int i = 0;
-   while (message[i] != 0) {
-       print_char(message[i++], col, row, WHITE_ON_BLACK);
-   }
+void kprint_at(char *message, s32 col, s32 row) {
+    /* Set cursor if col/row are negative */
+    s32 offset;
+    if (col < 0 && row < 0) {
+        offset = get_cursor_offset();
+        row = get_row_seqno(offset);
+        col = get_col_seqno(offset);
+    }
+
+    /* Loop through message and print it */
+    s32 i = 0;
+    while (message[i] != 0) {
+        offset = print_char(message[i++], col, row, WHITE_ON_BLACK);
+        
+        /* Compute row/col for next iteration */
+        row = get_row_seqno(offset);
+        col = get_col_seqno(offset);
+    }
 }
 
 void kprint(char *message) {
@@ -110,16 +155,13 @@ void kprint(char *message) {
 }
 
 void clear_screen() {
-   int row = 0;
-   int col = 0;
-   
-   /* Loop through video memory and write blank characters. */
-   for (row = 0; row < MAX_ROWS; row ++) {
-       for (col = 0; col < MAX_COLS; col ++) {
-           print_char(' ', col, row, WHITE_ON_BLACK);
-       }
-   }
+    s32 iter;
+    s32 screen_size = MAX_COLS * MAX_ROWS;
 
-   // Move the cursor back to the top left.
-   set_cursor(get_screen_offset(0 , 0));
+    char *screen = VIDEO_ADDRESS;
+    for (iter = 0; iter < screen_size; iter += 1) {
+        screen[iter*2] = ' ';
+        screen[iter*2+1] = WHITE_ON_BLACK;
+    }
+    set_cursor_offset(get_screen_offset(0, 0));
 }

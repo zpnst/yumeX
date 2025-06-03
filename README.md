@@ -2,7 +2,7 @@
 
 !!! The project has not been completed yet...
 
-That's all this operating system can do (yes, just output text about its boot =)):
+yumeX Hello World:
 
 <img src="vault/images/yumeX.png" alt="" width="600">
 
