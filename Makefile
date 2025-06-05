@@ -1,5 +1,5 @@
-C_SOURCES = $(wildcard kernel/*.c drivers/*.c kernel/libs/*.c cpu/*.c)
-HEADERS = $(wildcard kernel/*.h drivers/*.h kernel/libs/*.h cpu/*.h)
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c libc/*.c kernel/includes/*.c kernel/tests/*.c cpu/*.c)
+HEADERS = $(wildcard kernel/*.h drivers/*.h libc/*.h kernel/includes/*.h kernel/tests/*.h cpu/*.h)
 # Nice syntax for file extension replacement
 OBJ = ${C_SOURCES:.c=.o cpu/interrupt.o} 
 
@@ -45,7 +45,7 @@ debug: os-image.bin kernel.elf
 
 clean:
 	rm -rf *.bin *.dis *.o os-image.bin *.elf
-	rm -rf kernel/*.o boot/*.bin drivers/*.o kernel/libs/*.o boot/*.o cpu/*.o
+	rm -rf kernel/*.o boot/*.bin drivers/*.o libc/*.o boot/*.o cpu/*.o kernel/includes/*.o kernel/tests/*.o
 
 
 

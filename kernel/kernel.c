@@ -1,26 +1,29 @@
-#include "libs/logs.h"
-#include "libs/utils.h"
+#include "../libc/string.h"
+
+#include "../drivers/timer.h"
+#include "../drivers/keyboard.h"
+
+#include "./includes/logs.h"
+
+#include "./tests/basic_tests.h"
 
 void kermain() {
-
     ker_init_log();
     draw_yumeX_logo();
 
-    /* Fill up the screen */
-    int cnt = 11;
-    for (int iter = 42; iter <= 46; iter += 1) {
-        char str[255];
-        int_to_ascii(iter, str);
-        kprint_at(str, 0, cnt);
-        cnt += 1;
-    }
-
-    kprint_at("This text forces the kernel to scroll. Row 0 will disappear.\n", 60, 16);
-
     isr_install();
-    
-    /* Test the interrupts */
-    __asm__ __volatile__("int $0");
-    __asm__ __volatile__("int $9");
-    __asm__ __volatile__("int $32");
+    irq_install();
+
+    kprint("Type something, it will go through the kernel\n"
+        "Type END to halt the CPU\n> ");
+}
+
+void user_input(char *input) {
+    if (strcmp(input, "END") == 0) {
+        kprint("Stopping the CPU. Bye!\n");
+        asm volatile("hlt");
+    }
+    kprint("You said: ");
+    kprint(input);
+    kprint("\n> ");
 }

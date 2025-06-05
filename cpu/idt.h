@@ -1,7 +1,7 @@
 #ifndef IDT_H
 #define IDT_H
 
-#include "../kernel/libs/types.h"
+#include "../libc/types.h"
 
 /* Segment selectors */
 #define KERNEL_CS 0x08
@@ -47,4 +47,4 @@ typedef struct {
 void set_idt_gate(s32 n, u32 handler);
 void set_idt();
 
-#endif
+#endif /** IDT_H */

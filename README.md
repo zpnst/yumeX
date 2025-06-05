@@ -17,3 +17,7 @@ make run && make clean
 
 ## GCC Cross Compiler osdev guide
 https://wiki.osdev.org/GCC_Cross-Compiler
+
+## Links
+https://github.com/lukearend/x86-bootloader
+https://github.com/cfenollosa/os-tutorial

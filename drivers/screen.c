@@ -1,8 +1,7 @@
 #include "screen.h"
-#include "ports.h"
-#include "../kernel/libs/utils.h"
-#include "../kernel/libs/types.h"
-
+#include "../cpu/ports.h"
+#include "../libc/mem.h"
+#include "../libc/types.h"
 s32 get_screen_offset(s32 col, s32 row) { 
     return 2 * (row * MAX_COLS + col); 
 }
@@ -115,7 +114,10 @@ s32 print_char(char character, s32 col, s32 row, char attribute_byte) {
         offset = get_screen_offset(0, row+1);
        // Otherwise, write the character and its attribute byte to
        // video memory at our calculated offset.
-   } else {
+    }  else if (character == 0x08) { /* Backspace */
+        vidmem[offset] = ' ';
+        vidmem[offset+1] = attribute_byte;
+    } else {
        vidmem[offset] = character;
        vidmem[offset+1] = attribute_byte;
        offset += 2;
@@ -148,6 +150,13 @@ void kprint_at(char *message, s32 col, s32 row) {
         row = get_row_seqno(offset);
         col = get_col_seqno(offset);
     }
+}
+
+void kprint_backspace() {
+    int offset = get_cursor_offset() - 2;
+    int row = get_row_seqno(offset);
+    int col = get_col_seqno(offset);
+    print_char(0x08, col, row, WHITE_ON_BLACK);
 }
 
 void kprint(char *message) {
