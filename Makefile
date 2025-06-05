@@ -12,8 +12,8 @@ LD = /usr/local/i686-elf/bin/i686-elf-ld
 CFLAGS = -g
 
 # First rule is run by default
-os-image.bin: boot/bootsect.bin kernel.bin
-	cat $^ > os-image.bin
+yumeX-image: boot/bootsect.bin kernel.bin
+	cat $^ > yumeX-image
 
 # '--oformat binary' deletes all symbols as a collateral, so we don't need
 # to 'strip' them manually on this case
@@ -24,12 +24,12 @@ kernel.bin: boot/kernel_entry.o ${OBJ}
 kernel.elf: boot/kernel_entry.o ${OBJ}
 	${LD} -o $@ -Ttext 0x1000 $^ 
 
-run: os-image.bin
-	qemu-system-i386 -fda os-image.bin
+run: yumeX-image
+	qemu-system-i386 -fda yumeX-image
 
 # Open the connection to qemu and load our kernel-object file with symbols
-debug: os-image.bin kernel.elf
-	qemu-system-i386 -s -fda os-image.bin -d guest_errors,int &
+debug: yumeX-image kernel.elf
+	qemu-system-i386 -s -fda yumeX-image -d guest_errors,int &
 	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
 # Generic rules for wildcards
@@ -44,10 +44,5 @@ debug: os-image.bin kernel.elf
 	nasm $< -f bin -o $@
 
 clean:
-	rm -rf *.bin *.dis *.o os-image.bin *.elf
+	rm -rf *.bin *.dis *.o yumeX-image *.elf
 	rm -rf kernel/*.o boot/*.bin drivers/*.o libc/*.o boot/*.o cpu/*.o kernel/includes/*.o kernel/tests/*.o
-
-
-
-
-

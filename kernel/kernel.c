@@ -22,8 +22,14 @@ void user_input(char *input) {
     if (strcmp(input, "END") == 0) {
         kprint("Stopping the CPU. Bye!\n");
         asm volatile("hlt");
+    } else if (strcmp(input, "YUMEX") == 0) {
+        draw_yumeX_logo();
+        kprint("\n> ");
+    } else if (strcmp(input, "") == 0) {
+        kprint(">");
+    } else {
+        kprint("You said: ");
+        kprint(input);
+        kprint("\n> ");
     }
-    kprint("You said: ");
-    kprint(input);
-    kprint("\n> ");
 }
