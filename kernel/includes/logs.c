@@ -1,7 +1,12 @@
 #include "../../drivers/screen.h"
 
-const char *strip = "----------------------------------------------------------------------------";
-const char *message = "The yumeX kernel was successfully loaded in 32-bit protected mode.";
+const char *STRIP = "----------------------------------------------------------------------------";
+const char *MESSAGE = "The yumeX kernel was successfully loaded in 32-bit protected mode.";
+
+const char *SHELL_HELP_MESSAGE = 
+        "Type \"HALT\" to halt the CPU\n"
+        "Type \"HELP\" to see the manual.\n"
+        "Type \"YUMEX\" to draw the yumeX logo.\n> ";
 
 void draw_yumeX_logo() {
     kprint("                              _  __    ____  _____\n");
@@ -13,13 +18,16 @@ void draw_yumeX_logo() {
     kprint("\n");
 }
 
-
 void ker_init_log() {
     clear_screen();
-    kprint((char*)strip);
+    kprint((char*)STRIP);
     kprint("\n");
-    kprint((char*)message);
+    kprint((char*)MESSAGE);
     kprint("\n");
-    kprint((char*)strip);
+    kprint((char*)STRIP);
     kprint("\n\n");
+}
+
+void ker_init_help() {
+    kprint(SHELL_HELP_MESSAGE);
 }
