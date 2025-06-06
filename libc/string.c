@@ -33,17 +33,17 @@ s32 strlen(char string[]) {
 }
 
 void append(char string[], char number) {
-    int len = strlen(string);
+    s32 len = strlen(string);
     string[len] = number;
     string[len+1] = '\0';
 }
 
 void backspace(char string[]) {
-    int len = strlen(string);
+    s32 len = strlen(string);
     string[len-1] = '\0';
 }
 
-int strcmp(char string1[], char string2[]) {
+s32 strcmp(char string1[], char string2[]) {
     s32 iter;
     for (iter = 0; string1[iter] == string2[iter]; iter++) {
         if (string1[iter] == '\0') return 0;
