@@ -38,6 +38,7 @@ After setting the parameters, click on "Finish"
 <img src="attachments/pictures/VirtualBox-3.jpg" alt="" width="600">
 
 After creating a virtual machine, go to the settings, select the "Storage" section and delete the basic VDI file that was created by default.
+
 <img src="attachments/pictures/VirtualBox-4.jpg" alt="" width="600">
 <img src="attachments/pictures/VirtualBox-5.jpg" alt="" width="600">
 
