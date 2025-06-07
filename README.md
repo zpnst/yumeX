@@ -10,14 +10,17 @@ yumeX Hello World:
 ```
 make run
 ```
-### Dependencies: qemu
+### Dependencies: 
+- qemu
 
 ## How to build:
 ```
 make build
 ```
 
-### Dependencies: i686-elf-gcc, i686-elf-ld
+### Dependencies: 
+- i686-elf-gcc
+- i686-elf-ld
 
 ## GCC Cross Compiler osdev guide
 - https://wiki.osdev.org/GCC_Cross-Compiler
