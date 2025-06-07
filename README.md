@@ -11,7 +11,7 @@ yumeX Hello World:
 make run
 ```
 ### Dependencies: 
-- qemu
+- qemu-system-x86_64 (by default for many Linux distributions)
 
 ## How to build:
 ```
