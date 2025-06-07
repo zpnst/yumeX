@@ -40,7 +40,7 @@ shell_input(char *input)
     } else if (strcmp(input, "CLEAR") == 0) {
         clear_screen();
     } else if (strcmp(input, "") == 0) {
-        kprint(">");
+        kprint("> ");
     } else {
         kprint("Echo: ");
         kprint(input);

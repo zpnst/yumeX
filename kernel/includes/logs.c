@@ -4,7 +4,7 @@ const char *STRIP = "-----------------------------------------------------------
 const char *MESSAGE = "The yumeX kernel was successfully loaded in 32-bit protected mode.";
 
 const char *SHELL_INIT_MESSAGE = 
-    "Type \"MAN\" to see the manual.\n>";
+    "Type \"MAN\" to see the manual.\n> ";
 
 const char *SHELL_MANUAL_MESSAGE = 
         "Type \"HALT\" to halt the CPU.\n"
