@@ -15,12 +15,16 @@ CFLAGS = -g
 yumeX.img: boot/bootsect.bin kernel.bin
 	cat $^ > yumeX.img
 
+yumeX.vdi: yumeX.img
+	truncate -s 1474560 yumeX.img
+	VBoxManage convertfromraw yumeX.img yumeX.vdi --format VDI
+
 # '--oformat binary' deletes all symbols as a collateral, so we don't need
 # to 'strip' them manually on this case
 kernel.bin: boot/kernel_entry.o ${OBJ}
 	${LD} -o $@ -Ttext 0x1000 $^ --oformat binary
 
-build: yumeX.img
+build: yumeX.vdi
 
 run:
 	qemu-system-i386 -fda yumeX.img
@@ -39,3 +43,6 @@ run:
 clean:
 	rm -rf *.bin *.dis *.o *.elf
 	rm -rf kernel/*.o boot/*.bin drivers/*.o libc/*.o boot/*.o x86/*.o kernel/includes/*.o kernel/tests/*.o
+
+cleani:
+	rm yumeX.img yumeX.vdi

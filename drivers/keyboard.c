@@ -39,6 +39,7 @@ shell_input(char *input)
         kprint("\n> ");
     } else if (strcmp(input, "CLEAR") == 0) {
         clear_screen();
+        kprint("> ");
     } else if (strcmp(input, "") == 0) {
         kprint("> ");
     } else {
