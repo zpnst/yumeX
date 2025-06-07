@@ -10,30 +10,14 @@ yumeX Hello World:
 ```
 make run
 ```
-
-### Dependencies:
-1) qemu
-
-If you own a linux distribution, try the following commands:
-
-```
-qemu-system-x86_64 -fda yumeX.img
-```
-
-or
-
-```
-kvm -fda yumeX.img
-```
+### Dependencies: qemu
 
 ## How to build:
 ```
 make build
 ```
 
-### Dependencies:
-1) i686-elf-gcc
-2) i686-elf-ld
+### Dependencies: i686-elf-gcc, i686-elf-ld
 
 ## GCC Cross Compiler osdev guide
 - https://wiki.osdev.org/GCC_Cross-Compiler
