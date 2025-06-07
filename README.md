@@ -57,4 +57,5 @@ Click on the green "Start" arrow at the top of the screen to start the VM
 
 ## Links
 - https://github.com/lukearend/x86-bootloader
+- https://github.com/xueyuanl/ebooks/blob/master/os-dev.pdf
 - https://github.com/cfenollosa/os-tutorial
