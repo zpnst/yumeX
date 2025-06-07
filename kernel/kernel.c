@@ -6,7 +6,9 @@
 #include "./includes/logs.h"
 #include "./tests/basic_tests.h"
 
-void kermain() {
+void 
+kermain() 
+{
     /** init interrupts */
     isr_install();
     irq_install();
@@ -14,5 +16,5 @@ void kermain() {
     /** kernel init messages */
     ker_init_log();
     draw_yumeX_logo();
-    ker_init_help();
+    ker_shell_init_message();
 }

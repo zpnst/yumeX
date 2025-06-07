@@ -9,7 +9,9 @@
 
 #include "../../kernel/includes/logs.h"
 
-void test_IO() {
+void 
+test_IO() 
+{
     ker_init_log();
     draw_yumeX_logo();
 
@@ -25,7 +27,9 @@ void test_IO() {
     kprint_at("This text forces the kernel to scroll. Row 0 will disappear.\n", 60, 16);
 }
 
-void test_INT() {
+void 
+test_INT()
+{
     isr_install();
 
     /* Test the interrupts */
@@ -34,6 +38,8 @@ void test_INT() {
     __asm__ __volatile__("int $32");
 }
 
-void test_Timer() {
+void 
+test_Timer() 
+{
     init_timer(50);
 }

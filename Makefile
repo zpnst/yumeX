@@ -12,25 +12,18 @@ LD = /usr/local/i686-elf/bin/i686-elf-ld
 CFLAGS = -g
 
 # First rule is run by default
-yumeX-image: boot/bootsect.bin kernel.bin
-	cat $^ > yumeX-image
+yumeX.img: boot/bootsect.bin kernel.bin
+	cat $^ > yumeX.img
 
 # '--oformat binary' deletes all symbols as a collateral, so we don't need
 # to 'strip' them manually on this case
 kernel.bin: boot/kernel_entry.o ${OBJ}
 	${LD} -o $@ -Ttext 0x1000 $^ --oformat binary
 
-# Used for debugging purposes
-kernel.elf: boot/kernel_entry.o ${OBJ}
-	${LD} -o $@ -Ttext 0x1000 $^ 
+build: yumeX.img
 
-run: yumeX-image
-	qemu-system-i386 -fda yumeX-image
-
-# Open the connection to qemu and load our kernel-object file with symbols
-debug: yumeX-image kernel.elf
-	qemu-system-i386 -s -fda yumeX-image -d guest_errors,int &
-	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
+run:
+	qemu-system-i386 -fda yumeX.img
 
 # Generic rules for wildcards
 # To make an object, always compile from its .c
@@ -44,5 +37,5 @@ debug: yumeX-image kernel.elf
 	nasm $< -f bin -o $@
 
 clean:
-	rm -rf *.bin *.dis *.o yumeX-image *.elf
+	rm -rf *.bin *.dis *.o *.elf
 	rm -rf kernel/*.o boot/*.bin drivers/*.o libc/*.o boot/*.o x86/*.o kernel/includes/*.o kernel/tests/*.o

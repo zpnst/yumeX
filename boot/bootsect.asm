@@ -2,6 +2,18 @@
 [org 0x7c00]                 ; A boot sector that enters 32 - bit protected mode.
 KERNEL_OFFSET equ 0x1000     ; This is the memory offset to which we will load our kernel
 
+start:
+  jmp	0x0000:boot
+  times 8-($-$$) db 0
+
+  ;	Boot Information Table
+  bi_PrimaryVolumeDescriptor  resd  1    ; LBA of the Primary Volume Descriptor
+  bi_BootFileLocation         resd  1    ; LBA of the Boot File
+  bi_BootFileLength           resd  1    ; Length of the boot file in bytes
+  bi_Checksum                 resd  1    ; 32 bit checksum
+  bi_Reserved                 resb  40   ; Reserved 'for future standardization'
+
+boot:
     mov [BOOT_DRIVE], dl     ; BIOS stores our boot drive in DL, so it ’s
                              ; best to remember this for later.
                             

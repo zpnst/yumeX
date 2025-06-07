@@ -3,12 +3,18 @@
 const char *STRIP = "----------------------------------------------------------------------------";
 const char *MESSAGE = "The yumeX kernel was successfully loaded in 32-bit protected mode.";
 
-const char *SHELL_HELP_MESSAGE = 
-        "Type \"HALT\" to halt the CPU\n"
-        "Type \"HELP\" to see the manual.\n"
-        "Type \"YUMEX\" to draw the yumeX logo.\n> ";
+const char *SHELL_INIT_MESSAGE = 
+    "Type \"MAN\" to see the manual.\n>";
 
-void draw_yumeX_logo() {
+const char *SHELL_MANUAL_MESSAGE = 
+        "Type \"HALT\" to halt the CPU.\n"
+        "Type \"MAN\" to see the manual.\n"
+        "Type \"CLEAR\" to clear the screen.\n"
+        "Type \"YUMEX\" to draw the yumeX logo.";
+
+void 
+draw_yumeX_logo()
+{
     kprint("                              _  __    ____  _____\n");
     kprint("   __  ____  ______ ___  ___ | |/ /   / __ \\/ ___/\n");
     kprint("  / / / / / / / __ `__ \\/ _ \\|   /   / / / /\\__ \\\n");
@@ -18,7 +24,9 @@ void draw_yumeX_logo() {
     kprint("\n");
 }
 
-void ker_init_log() {
+void 
+ker_init_log() 
+{
     clear_screen();
     kprint((char*)STRIP);
     kprint("\n");
@@ -28,6 +36,14 @@ void ker_init_log() {
     kprint("\n\n");
 }
 
-void ker_init_help() {
-    kprint((char *)SHELL_HELP_MESSAGE);
+void 
+ker_manual() 
+{
+    kprint((char *)SHELL_MANUAL_MESSAGE);
+}
+
+void
+ker_shell_init_message()
+{
+    kprint((char *)SHELL_INIT_MESSAGE);
 }

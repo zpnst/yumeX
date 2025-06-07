@@ -5,18 +5,27 @@
 #include "../libc/mem.h"
 #include "../libc/types.h"
 
-s32 get_screen_offset(s32 col, s32 row) { 
+s32 
+get_screen_offset(s32 col, s32 row) 
+{ 
     return 2 * (row * MAX_COLS + col); 
 }
 
-s32 get_row_seqno(s32 offset) { 
+s32 
+get_row_seqno(s32 offset) 
+{ 
     return offset / (2 * MAX_COLS);
 }
-s32 get_col_seqno(s32 offset) { 
+
+s32
+get_col_seqno(s32 offset) 
+{ 
     return (offset - (get_row_seqno(offset)*2*MAX_COLS))/2; 
 }
 
-s32 get_cursor_offset() {
+s32 
+get_cursor_offset()
+{
 
    /*  The device uses its control register as an index
        to select its internal registers, of which we are
@@ -39,7 +48,9 @@ s32 get_cursor_offset() {
    return offset * 2;
 }
 
-void set_cursor_offset(s32 cursor_offset) {    
+void 
+set_cursor_offset(s32 cursor_offset) 
+{    
    cursor_offset /= 2; // Convert from cell offset to char offset.
 
    // This is similar to get_cursor_offset, only now we write
@@ -55,7 +66,9 @@ void set_cursor_offset(s32 cursor_offset) {
 }
 
 /* Advance the text cursor , scrolling the video buffer if necessary . */
-s32 handle_scrolling(s32 cursor_offset) {
+s32 
+handle_scrolling(s32 cursor_offset) 
+{
     // If the cursor is within the screen, return it unmodified .
     if (cursor_offset < MAX_ROWS * MAX_COLS * 2) {
         return cursor_offset;
@@ -84,7 +97,9 @@ s32 handle_scrolling(s32 cursor_offset) {
 }
 
 /* Print a char on the screen at col, row, or at cursor position */
-s32 print_char(char character, s32 col, s32 row, char attribute_byte) {
+s32 
+print_char(char character, s32 col, s32 row, char attribute_byte) 
+{
 
    /* Create a byte (char) pointer to the start of video memory */
    unsigned char *vidmem = (unsigned char *)VIDEO_ADDRESS;
@@ -136,7 +151,9 @@ s32 print_char(char character, s32 col, s32 row, char attribute_byte) {
    return offset;
 }
 
-void kprint_at(char *message, s32 col, s32 row) {
+void 
+kprint_at(char *message, s32 col, s32 row) 
+{
     /* Set cursor if col/row are negative */
     s32 offset;
     if (col < 0 && row < 0) {
@@ -156,18 +173,24 @@ void kprint_at(char *message, s32 col, s32 row) {
     }
 }
 
-void kprint_backspace() {
+void
+kprint_backspace() 
+{
     int offset = get_cursor_offset() - 2;
     int row = get_row_seqno(offset);
     int col = get_col_seqno(offset);
     print_char(0x08, col, row, WHITE_ON_BLACK);
 }
 
-void kprint(char *message) {
+void 
+kprint(char *message) 
+{
    kprint_at(message, -1, -1);
 }
 
-void clear_screen() {
+void 
+clear_screen() 
+{
     s32 iter;
     s32 screen_size = MAX_COLS * MAX_ROWS;
 
