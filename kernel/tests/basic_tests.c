@@ -1,3 +1,14 @@
+#include "basic_tests.h"
+
+#include "../../x86/isr.h"
+
+#include "../../libc/string.h"
+
+#include "../../drivers/timer.h"
+#include "../../drivers/screen.h"
+
+#include "../../kernel/includes/logs.h"
+
 void test_IO() {
     ker_init_log();
     draw_yumeX_logo();

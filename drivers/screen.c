@@ -1,7 +1,10 @@
 #include "screen.h"
-#include "../cpu/ports.h"
+
+#include "../x86/ports.h"
+
 #include "../libc/mem.h"
 #include "../libc/types.h"
+
 s32 get_screen_offset(s32 col, s32 row) { 
     return 2 * (row * MAX_COLS + col); 
 }
@@ -61,13 +64,14 @@ s32 handle_scrolling(s32 cursor_offset) {
     /* Shuffle the rows back one. */
     s32 iter;
     for (iter = 0; iter < MAX_ROWS; iter += 1) {
-        memory_copy(get_screen_offset(0, iter)+VIDEO_ADDRESS,
-            get_screen_offset(0, iter-1)+VIDEO_ADDRESS,
+        memory_copy(
+            (char*)get_screen_offset(0, iter) + VIDEO_ADDRESS,
+            (char*)get_screen_offset(0, iter-1) + VIDEO_ADDRESS,
             MAX_COLS*2
         );
     }
     /* Blank the last line by setting all bytes to 0 */
-    char *ll = get_screen_offset(0, MAX_ROWS-1) + VIDEO_ADDRESS;
+    char *ll = (char*)get_screen_offset(0, MAX_ROWS-1) + VIDEO_ADDRESS;
     for (iter = 0; iter < MAX_COLS * 2; iter++) {
         ll[iter] = 0;
     }
@@ -167,7 +171,7 @@ void clear_screen() {
     s32 iter;
     s32 screen_size = MAX_COLS * MAX_ROWS;
 
-    char *screen = VIDEO_ADDRESS;
+    char *screen = (char*)VIDEO_ADDRESS;
     for (iter = 0; iter < screen_size; iter += 1) {
         screen[iter*2] = ' ';
         screen[iter*2+1] = WHITE_ON_BLACK;

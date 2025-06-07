@@ -29,5 +29,5 @@ void ker_init_log() {
 }
 
 void ker_init_help() {
-    kprint(SHELL_HELP_MESSAGE);
+    kprint((char *)SHELL_HELP_MESSAGE);
 }

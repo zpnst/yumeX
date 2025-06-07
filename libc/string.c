@@ -1,5 +1,20 @@
 #include "types.h"
 
+s32 strlen(char string[]) {
+    s32 iter = 0;
+    while (string[iter] != '\0') ++iter;
+    return iter;
+}
+
+void reverse(char string[]) {
+    s32 tmpr, iter, jter;
+    for (iter = 0, jter = strlen(string)-1; iter < jter; iter += 1, jter -= 1) {
+        tmpr = string[iter];
+        string[iter] = string[jter];
+        string[jter] = tmpr;
+    }
+}
+
 void int_to_ascii(s32 number, char string[]) {
     s32 sign;
     if ((sign = number) < 0) {
@@ -15,21 +30,6 @@ void int_to_ascii(s32 number, char string[]) {
     string[iter] = '\0';
 
     reverse(string);
-}
-
-void reverse(char string[]) {
-    s32 tmpr, iter, jter;
-    for (iter = 0, jter = strlen(string)-1; iter < jter; iter += 1, jter -= 1) {
-        tmpr = string[iter];
-        string[iter] = string[jter];
-        string[jter] = tmpr;
-    }
-}
-
-s32 strlen(char string[]) {
-    s32 iter = 0;
-    while (string[iter] != '\0') ++iter;
-    return iter;
 }
 
 void append(char string[], char number) {

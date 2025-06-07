@@ -1,7 +1,7 @@
-C_SOURCES = $(wildcard kernel/*.c drivers/*.c libc/*.c kernel/includes/*.c kernel/tests/*.c cpu/*.c)
-HEADERS = $(wildcard kernel/*.h drivers/*.h libc/*.h kernel/includes/*.h kernel/tests/*.h cpu/*.h)
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c libc/*.c kernel/includes/*.c kernel/tests/*.c x86/*.c)
+HEADERS = $(wildcard kernel/*.h drivers/*.h libc/*.h kernel/includes/*.h kernel/tests/*.h x86/*.h)
 # Nice syntax for file extension replacement
-OBJ = ${C_SOURCES:.c=.o cpu/interrupt.o} 
+OBJ = ${C_SOURCES:.c=.o x86/interrupt.o} 
 
 # Change this if your cross-compiler is somewhere else
 CC = /usr/local/i686-elf/bin/i686-elf-gcc
@@ -45,4 +45,4 @@ debug: yumeX-image kernel.elf
 
 clean:
 	rm -rf *.bin *.dis *.o yumeX-image *.elf
-	rm -rf kernel/*.o boot/*.bin drivers/*.o libc/*.o boot/*.o cpu/*.o kernel/includes/*.o kernel/tests/*.o
+	rm -rf kernel/*.o boot/*.bin drivers/*.o libc/*.o boot/*.o x86/*.o kernel/includes/*.o kernel/tests/*.o

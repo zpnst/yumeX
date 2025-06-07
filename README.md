@@ -4,7 +4,7 @@
 
 yumeX Hello World:
 
-<img src="vault/images/yumeX.png" alt="" width="600">
+<img src="attachments/png/yumeX.png" alt="" width="600">
 
 ## How to run:
 ```

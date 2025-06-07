@@ -1,6 +1,9 @@
 #include "timer.h"
 #include "screen.h"
-#include "../cpu/isr.h"
+
+#include "../x86/isr.h"
+#include "../x86/ports.h"
+
 #include "../libc/string.h"
 #include "../libc/function.h"
 

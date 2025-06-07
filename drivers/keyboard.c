@@ -1,10 +1,13 @@
 #include "keyboard.h"
-#include "../cpu/ports.h"
-#include "../cpu/isr.h"
 #include "screen.h"
+
+#include "../x86/ports.h"
+#include "../x86/isr.h"
+
 #include "../libc/string.h"
 #include "../libc/function.h"
-#include "../kernel/kernel.h"
+
+#include "../kernel/includes/logs.h"
 
 #define BACKSPACE 0x0E
 #define ENTER 0x1C
@@ -25,6 +28,25 @@ const char sc_ascii[] = { '?', '?', '1', '2', '3', '4', '5', '6',
         'H', 'J', 'K', 'L', ';', '\'', '`', '?', '\\', 'Z', 'X', 'C', 'V', 
         'B', 'N', 'M', ',', '.', '/', '?', '?', '?', ' '};
 
+
+void shell_input(char *input) {
+    if (strcmp(input, "HALT") == 0) {
+        kprint("Stopping the CPU. Bye!\n");
+        __asm__ __volatile__("hlt");
+    } else if (strcmp(input, "YUMEX") == 0) {
+        draw_yumeX_logo();
+        kprint("\n> ");
+    } else if (strcmp(input, "HELP") == 0) {
+        ker_init_help();
+    } else if (strcmp(input, "") == 0) {
+        kprint(">");
+    } else {
+        kprint("Echo: ");
+        kprint(input);
+        kprint("\n> ");
+    }
+}
+
 static void keyboard_callback(registers_t regs) {
     /* The PIC leaves us the scancode in port 0x60 */
     u8 scancode = port_byte_in(0x60);
@@ -35,7 +57,7 @@ static void keyboard_callback(registers_t regs) {
         kprint_backspace();
     } else if (scancode == ENTER) {
         kprint("\n");
-        user_input(key_buffer); /* kernel-controlled function */
+        shell_input(key_buffer); /* kernel-controlled function */
         key_buffer[0] = '\0';
     } else {
         char letter = sc_ascii[(int)scancode];
