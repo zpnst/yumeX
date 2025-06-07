@@ -45,7 +45,7 @@ After creating a virtual machine, go to the settings, select the "Storage" secti
 Next, at the bottom of the screen, click on "Add Attachment" and select "Hard Disk"
 <img src="attachments/pictures/VirtualBox-6.jpg" alt="" width="600">
 
-In the window that opens, click on "Add" and select yumeX.the vdi file that lies at the root of the repository
+In the window that opens, click on "Add" and select yumeX.vdi file that lies at the root of the repository
 <img src="attachments/pictures/VirtualBox-7.jpg" alt="" width="600">
 
 After all this, save the result, click on "Ok" in the lower-right corner of the settings window and the VM is ready!
