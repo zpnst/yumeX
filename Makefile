@@ -24,7 +24,7 @@ yumeX.vdi: yumeX.img
 kernel.bin: boot/kernel_entry.o ${OBJ}
 	${LD} -o $@ -Ttext 0x1000 $^ --oformat binary
 
-build: yumeX.vdi
+build: yumeX.img
 
 run:
 	qemu-system-i386 -fda yumeX.img

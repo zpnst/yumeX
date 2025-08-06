@@ -1,7 +1,5 @@
 # yumeX OS
 
-!!! The project has not been completed yet...
-
 yumeX Hello World:
 
 <img src="attachments/pictures/yumeX.png" alt="" width="600">
