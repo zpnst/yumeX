@@ -10,7 +10,8 @@ const char *SHELL_MANUAL_MESSAGE =
         "Type \"HALT\" to halt the CPU.\n"
         "Type \"MAN\" to see the manual.\n"
         "Type \"CLEAR\" to clear the screen.\n"
-        "Type \"YUMEX\" to draw the yumeX logo.";
+        "Type \"YUMEX\" to draw the yumeX logo.\n"
+        "Type \"MIKOLA\" to see some information about mikola.";
 
 void 
 draw_yumeX_logo()
@@ -22,6 +23,12 @@ draw_yumeX_logo()
     kprint(" \\__, /\\__,_/_/ /_/ /_/\\___/_/|_|   \\____//____/\n");
     kprint("/____/\n");
     kprint("\n");
+}
+
+void 
+get_mikola_information()
+{
+    kprint("Please subscribe: https://github.com/MikalaiLappo");
 }
 
 void 
